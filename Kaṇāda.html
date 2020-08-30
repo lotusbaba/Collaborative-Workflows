@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<script>
+/*
+Preamble
+
+The Kaṇāda Open Source Initiative is an initiative to spread awareness about unrecognized individuals or peoples whose important contributions in 
+science, technology, philosophy, language, politics, art, architecture, and culture continue to have an impact to this day.
+This is hopefully one of only first such projects which uses the spirit of sharing via the Open Source Software community and turns into a movement 
+with the simple goal of helping understand these peoples and their stories using facts and keeping them alive with memories and useful software
+Simple rules to follow while contributing with Kaṇāda Open Source Initiative (KOSI)
+
+1. Please use primary or secondary sources of reference such as yours or someone else’s research on the topic, via writings, pictures, or videos
+2. Please avoid tertiary sources of reference (i.e. to wikipedia, quora etc.)
+3. Please make an effort to publish code which is useful and not just snippets
+4. You may use the preamble or inline description for your stories and references e.g. to the Incas and their art or architecture
+5. Please include this preamble to your project and if it’s an HTML file you will notice the preamble is enclosed within the <script> element
+
+*/
+</script>
+<html>
+  <head>
+    <base target="_top">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script> 
+    var listOfEmails = "nada";
+    var reviewerEmailList = {};
+    
+    function addListOfEmails(emails)
+    {
+      listOfEmails = emails;
+    }
+    
+    function addListReviewerEmails(emailObjs)
+    {
+      reviewerEmailList = emailObjs;
+      //alert(JSON.stringify(emailObjs));
+      setTimeout(addReviewerEmails(), 1000);
+    }    
+        
+    function addReviewerEmails () {
+      //alert(reviewerEmailList);
+      for (i in reviewerEmailList) {
+      
+      //alert(Object.keys(reviewerEmailList[i]).valueOf());
+      //alert(Object.values(reviewerEmailList[i]).toString());
+      
+        var para = document.createElement("P");
+        
+        para.classList.add('content');
+        para.classList.add('card');
+        para.classList.add('card-text');
+        para.classList.add('mb-4');
+        para.classList.add('box-shadow');
+        para.classList.add('card-body');        
+        para.setAttribute("name", Object.keys(reviewerEmailList[i]).valueOf().toString());
+        
+        para.innerHTML = "Review request status: " + "<u>" + Object.values(reviewerEmailList[i]).toString() + "</u>"  + " Reviewer - " + Object.keys(reviewerEmailList[i]).valueOf();
+        //alert(para.innerHTML);
+        document.getElementById("reviewer-group").appendChild(para);
+        
+        var resendButn = document.createElement("BUTTON");
+        //resendButn.setAttribute("id", Object.keys(reviewerEmailList[i]).valueOf());
+        resendButn.setAttribute("name", Object.keys(reviewerEmailList[i]).valueOf().toString());
+        //resendButn.setAttribute("id", "#resendButn" + i);
+        resendButn.setAttribute("width", "40px");
+        resendButn.setAttribute("height","40px");
+        resendButn.setAttribute("display","inline-block");
+        resendButn.innerHTML = "Resend for review";
+        resendButn.classList.add('review-resend');
+        
+       /* approveButn.addEventListener('click', function() {
+        alert(JSON.stringify(Object.keys(reviewerEmailList[i]).valueOf()));
+        google.script.run.withSuccessHandler(emailHandler).withUserObject(this).sendEmails(JSON.stringify(Object.keys(reviewerEmailList[i]).valueOf()), "resent");
+        google.script.run.showAlert("Email has been resent to the reviewer: " + JSON.stringify(Object.keys(reviewerEmailList[i]).valueOf()));
+        });*/
+        
+        para.appendChild(resendButn);
+        
+        var approveButn = document.createElement("BUTTON");
+        approveButn.setAttribute("name", Object.keys(reviewerEmailList[i]).valueOf().toString());
+        approveButn.setAttribute("width", "40px");
+        approveButn.setAttribute("height","40px");
+        approveButn.setAttribute("display","inline-block");
+        approveButn.innerHTML = "Approve";
+        approveButn.classList.add('review-approve');
+        para.appendChild(approveButn);
+                
+        var needChangeButn = document.createElement("BUTTON");
+        needChangeButn.setAttribute("name", Object.keys(reviewerEmailList[i]).valueOf().toString());
+        needChangeButn.setAttribute("width", "40px");
+        needChangeButn.setAttribute("height","40px");
+        needChangeButn.setAttribute("display","inline-block");
+        needChangeButn.innerHTML = "Needs Change";
+        needChangeButn.classList.add('review-change');
+        para.appendChild(needChangeButn);        
+        
+        var removeReviewerButn = document.createElement("BUTTON");
+        removeReviewerButn.setAttribute("name", Object.keys(reviewerEmailList[i]).valueOf().toString());
+        removeReviewerButn.setAttribute("width", "40px");
+        removeReviewerButn.setAttribute("height","40px");
+        removeReviewerButn.setAttribute("display","inline-block");
+        removeReviewerButn.innerHTML = "Remove Reviewer";
+        removeReviewerButn.classList.add('review-remove');
+        para.appendChild(removeReviewerButn);
+      }
+    }
+    
+     function IsEmailOK(email) {
+        var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        if(!regex.test(email)) {
+           return false;
+        } else{
+           return true;
+        }
+      }
+      
+      function emailHandler(returnValue, thisTextBox)
+      {
+        //alert(thisTextBox.value+thisTextBox.id);
+        
+        if(returnValue) {
+         var div = $('<div/>',{
+               text : "Sent for review to " + thisTextBox.value,
+               id : thisTextBox.id
+            });
+         //$("#"+thisTextBox.id).replaceWith("<div>" + "WTF!!" + "</div>");
+         $("#"+thisTextBox.id).replaceWith(div);
+        
+         thisTextBox.value = "Sent for review to " + thisTextBox.value;
+         //$(thisTextBox).attr("disabled", "disabled");
+       }
+      }
+      
+/*      function statusChangeHandler(returnValue, reviewerEmailListItem)
+      {
+      
+      google.script.run.showAlert("Reviewer: " + Object.keys(reviewerEmailListItem).valueOf().toString() + " Approval status: " + returnValue); //Without this the following lines don't seem to work
+      
+       /*if(returnValue == 1) {
+       google.script.run.withSuccessHandler(emailHandler).withUserObject(this).sendEmails(Object.keys(reviewerEmailListItem).valueOf().toString(), "Needs change");
+       //google.script.run.showAlert("Reviewer status updated with new status");
+       } else if(returnValue == 2) {
+       google.script.run.withSuccessHandler(emailHandler).withUserObject(this).sendEmails(Object.keys(reviewerEmailListItem).valueOf().toString(), "Approved");
+       //google.script.run.showAlert("Reviewer status updated with new status");
+       }
+       
+       if (returnValue)
+       google.script.run.withSuccessHandler(emailHandler).withUserObject(this).sendEmails(Object.keys(reviewerEmailListItem).valueOf().toString(), returnValue);
+      }
+*/
+      
+      function reviewButton(returnValue, thisButton) {
+      
+        //alert(listOfEmails);
+        $("input[class=card-text]").each(function(i){
+            var email = $(this).val();
+            //if($(this).getVerimailStatus() < 0) {
+            if(!IsEmailOK(email)) {
+                 //alert("This email ID \"" + $(this).val() + "\" is invalid");
+                 google.script.run.showAlert("This email ID \"" + $(this).val() + "\" is invalid");
+            } else {
+                 if (listOfEmails.includes(email)) {
+                         this.id = 'tempText'+i; // Add an id to the text box if email is valid
+                         google.script.run.withSuccessHandler(emailHandler).withUserObject(this).sendEmails(email, "sent");
+                 } else
+                        //alert("Please include email as \"Editor\" before sending to review");
+                        google.script.run.showAlert("Please include email as \"Editor\" before sending to review");
+            }
+        });
+        google.script.run.withSuccessHandler(addListOfEmails).getEditorEmails();
+      }      
+    </script>
+  </head>
+  
+  <body>
+      <div class="content">
+      <div class="card mb-4 box-shadow">
+        <div class="card-body"> <font size="2"/>
+          <h6 class="card-title">Welcome!</h6>
+          
+          <p class="card-text"> Please enter email of reviewers you'd like to get responses from!</p>
+          <div>
+          <!------ <div class="service_box">
+            <div class="form">
+            <form class="cmxform">
+            
+            
+            <input type="checkbox">
+            multiple textboxes shall be added here as
+            <input type="text" class="card-text"> 
+            <input type="text" class="card-text"> --->
+            
+            <button id="add" class="btn btn-primary ">Add Reviewers</button>
+            <!----------- </form>
+            </div> 
+            </div> --->
+            </div>
+          </div >
+          <div class="card-body">
+          <input type="button" id="get-started" id="change-textbox" class="btn btn-primary review" value="Send for Review"
+          onclick="google.script.run
+          .withSuccessHandler(reviewButton)
+          .withUserObject(this)
+          .addNewItem()" />
+          </div>
+        </div>
+        <p class="card-text" id="reviewer-group"></p>
+      </div>
+<script>
+$(function() {
+    $('#add').on('click', function( e ) {
+        e.preventDefault();
+        $('<div/>').addClass( 'new-text-div' )
+        //.html( $('<input type="textbox"/>').addClass('card-text').attr('id', 'tempText'))
+        //.append( $('<button/>').addClass( 'remove' ).text( 'Remove' ).attr('id', 'tempButn'))
+        .html( $('<input type="textbox"/>').addClass('card-text'))
+        .append( $('<button/>').addClass( 'remove' ).text( 'Remove' ))
+        .append($('<p/>').addClass( 'remove' ))
+        .insertBefore( this );
+    });
+    
+    $(document).on('click', 'button.remove', function( e ) {
+        e.preventDefault();
+        $(this).closest( 'div.new-text-div' ).remove();
+    });
+    
+    $(document).on('click', 'button.review-resend', function( e ) {
+    //$("button[name='review-resend']").click(function() {
+        e.preventDefault();
+        //alert($(this).attr('id'));
+        //google.script.run.withSuccessHandler(emailHandler).withUserObject(this).sendEmails($(this).attr('id'), "Resent");
+        google.script.run.withSuccessHandler(emailHandler).withUserObject(this).sendEmails($(this).attr('name'), "Resent");
+        //google.script.run.showAlert("Email has been resent to the reviewer: " + $(this).attr('id'));
+        google.script.run.showAlert("Email has been resent to the reviewer: " + $(this).attr('name'));
+    });
+
+    $(document).on('click', 'button.review-approve', function( e ) {
+    //$("button[name='review-approve']").click(function() {
+        e.preventDefault();
+        //alert($(this).attr('id'));
+        google.script.run.menuApprove($(this).attr('id'));
+        google.script.run.withSuccessHandler(emailHandler).withUserObject(this).sendEmails($(this).attr('name'), "Approved");
+    });
+    
+    $(document).on('click', 'button.review-change', function( e ) {
+    //$("button[name='review-change']").click(function() {
+        e.preventDefault();
+        //alert($(this).attr('id'));
+        google.script.run.menuNeedsChange($(this).attr('id'));
+        google.script.run.withSuccessHandler(emailHandler).withUserObject(this).sendEmails($(this).attr('name'), "Needs change");
+        
+    });
+    
+   $(document).on('click', 'button.review-remove', function( e ) {
+    //$("button[name='review-remove']").click(function() {
+        e.preventDefault();
+        //alert($(this).attr('id'));
+        google.script.run.removeObject($(this).attr('name'), "reviewerListObj");
+        google.script.run.withSuccessHandler(addListReviewerEmails).getReviewerEmails();
+        google.script.run.refreshSideBar();
+        var para = document.getElementsByName($(this).attr('name'));
+        /*for (var i = 0; i < para.length; i++) {
+        para[i].remove();
+        }*/
+    });    
+    
+    $( document ).ready(function() {
+     //$(function() {
+    google.script.run.withSuccessHandler(addListOfEmails).getEditorEmails();
+    });
+    
+    $(function() {
+    var ret = google.script.run.withSuccessHandler(addListReviewerEmails).getReviewerEmails();
+    });
+    
+  /*$(document).on('click', 'button.review', function( e )  {
+        e.preventDefault();
+        $("#tempText input[type=textbox]").each(function(i){
+            $(this).attr("disabled", "disabled");
+        });
+    });*/
+});
+</script>
+
+  </body>
+</html>
